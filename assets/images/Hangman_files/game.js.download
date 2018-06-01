@@ -7,24 +7,24 @@ var $wins = document.getElementById('wins');
 var $losses = document.getElementById('losses');
 
 //Game Variables wordBank, wins, losses, picked word, guesses left, game running, picked word placeholder, guessed letter bank, incorrect letter bank
-var wordBank = ["Milky Way", "Andromeda", "Black Hole"];
+var wordBank =["Milky Way", "Andromeda", "Black Hole"];
 var wins = 0;
 var losses = 0;
 var guessesLeft = 8;
 var gameRunning = false;
 var pickedWord = '';
-var hiddenWordArray = [];
+var pickedWordPlaceholderArr = [];
 var guessedLetterBank = [];
 var incorrectLetterBank = [];
 
 //newGame function to reset all stats pick one and create placeholder
-function newGame() {
+function newGame(){
     //reset game info
     gameRunning = true;
     guessesLeft = 8;
     guessedLetterBank = [];
     incorrectLetterBank = [];
-    hiddenWordArray = [];
+    pickedWordPlaceholderArr = [];
 
     //Pick a word
     pickedWord = wordBank[Math.floor(Math.random() * wordBank.length)];
@@ -32,16 +32,17 @@ function newGame() {
     // Create placeholders out of pickedWord
     for (var i = 0; i < pickedWord.length; i++) {
         if (pickedWord[i] === ' ') {
-            hiddenWordArray.push(' ');
+            pickedWordPlaceHolderArr.push(' ');
         } else {
-            hiddenWordArray.push('_');
+            pickedWordPlaceHolderArr.push('_');
         }
     }
 
     //Write all New Game info to DOM
     $guessesLeft.textContent = guessesLeft;
-    $placeholders.textContent = hiddenWordArray.join('');
+    $placeholders.textContent = pickedWordPlaceHolderArr.join('');
     $guessedLetters.textContent = incorrectLetterBank;
+
 }
 //letterGuess function takes in leter picked and checks to see if its in the word
 function letterGuess(letter) {
@@ -52,14 +53,14 @@ function letterGuess(letter) {
         guessedLetterBank.push(letter);
 
         //Check if guessed letter is in my picked word
-        for (var i = 0; i < pickedWord.length; i++)
+        for (var i = 0; i <pickedWord.length; i++)
         //Convert both values to lower case to compare correctly
         if (pickedWord[i].toLowerCase() === letter.toLowerCase()) {
            //if a match swap out placeholder with actual letter
-            hiddenWordArray[i] = pickedWord[i];
+            pickedWordPlaceholderArr[i] = pickedWord[i]
         }
     }
-        $placeholders.textContent = hiddenWordArray.join('');
+        $placeholders.textContent = pickedWordPlaceholderArr.join('');
 
 
          {
@@ -69,15 +70,15 @@ function letterGuess(letter) {
             alert('you have already guessed this letter, try a new one');
         }
     }
-
+}
 
 //checkIncorrect(letter)
 function checkIncorrect(letter){
-    //Check to see if letter didn't make it into hiddenWordArray
+    //Check to see if letter didn't make it into pickedWordPlaceholderArr
     if (
-    hiddenWordArray.indexOf(letter.toLowerCase()) === -1 
+    pickedWordPlaceholderArr.indexOf(letter.toLowerCase()) === -1 
     &&
-    hiddenWordArray.indexOf(letter.toUpperCase()) === -1
+    pickedWordPlaceholderArr.indexOf(letter.toUpperCase) === -1
      ) {
          //subtract guesses
          guessesLeft --;
@@ -96,13 +97,12 @@ function checkLoss() {
         losses++;
         gameRunning = false;
         $losses.textContent = losses;
-        $placeholders.textContent = pickedWord;
     }
     checkWin();
 }
 //checkWin
 function checkWin() {
-    if (pickedWord.toLowerCase() === hiddenWordArray.join('').toLowerCase());
+    if (pickedWord.toLowerCase() === pickedWordPlaceholderArr.join('').toLowerCase());
     {
         wins++;
         gameRunning = false;
@@ -110,10 +110,10 @@ function checkWin() {
     }
 }
 //add Event listener
-$newGameButton.addEventListener('click', newGame);
+$newGameButton.addEventListener('click', newGame());
 //add onKeyUp
 document.onkeyup = function(event) {
     if (event.keyCode >= 65 && event.keyCode <= 90) {
         letterGuess(event.key);
     }
-};
+}
